@@ -1,16 +1,28 @@
+import { ChangeEvent } from "react";
+
 const ImportFiles = () => {
-	const handleFileInputChange = (event) => {
-		const selectFiles = Array.from(event.target.files);
+	const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+		console.log('File input changed.');
+		const selectFiles = Array.from(event.target.files as FileList);
 		selectFiles.forEach((file) => {
+			console.log(`Processing file: ${file.name}`);
 			const reader = new FileReader();
 			reader.onload = () => {
-				const fileData = render.result;
-				const fileObjet = {
-					name: file.name,
-					data: new Uint8Array(fileData),
-				};
-
-				window.electronAPI.SendToElectron('music-upload', fileObjet);
+				console.log(`File ${file.name} loaded successfully.`);
+				const fileData = reader.result as ArrayBuffer;
+				if (fileData) {
+					console.log(`Sending file ${file.name} to Electron.`);
+					const fileObject = {
+						name: file.name,
+						data: new Uint8Array(fileData),
+					};
+					(window as any).electronAPI.SendToElectron('music-upload', fileObject);
+				} else {
+					console.error(`Failed to read file data for ${file.name}.`);
+				}
+			};
+			reader.onerror = () => {
+				console.error(`Error occurred while reading ${file.name}.`);
 			};
 			reader.readAsArrayBuffer(file);
 		});
