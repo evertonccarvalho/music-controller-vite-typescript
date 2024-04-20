@@ -27,6 +27,7 @@ const ImportFiles = () => {
 			reader.readAsArrayBuffer(file);
 		});
 	};
+
 	return (
 		<div className="mb-3">
 			<label

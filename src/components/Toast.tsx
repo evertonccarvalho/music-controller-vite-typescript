@@ -1,8 +1,24 @@
-"use client"
-import { useState } from "react";
+import { IpcRendererEvent } from "electron";
+import { useEffect, useState } from "react";
 
 const Toast = () => {
   const [mensagem, setMensagem] = useState("")
+  useEffect(() => {
+    (window as any).electronAPI.ReciveFromElectron("toast:recive", (event: IpcRendererEvent, arg: string) => {
+      setMensagem(arg)
+      const toast = document.getElementById("toast");
+      toast.classList.add("flex");
+      toast.classList.remove("hidden");
+      setTimeout(() => { handleClose() }, 5000)
+    });
+  }, []);
+
+  function handleClose() {
+    setMensagem("")
+    const toast = document.getElementById("toast");
+    toast.classList.add("hidden");
+    toast.classList.remove("flex");
+  }
   return (<>
     <div
       id="toast"
@@ -32,6 +48,7 @@ const Toast = () => {
           className="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
           data-te-toast-dismiss
           aria-label="Close"
+          onClick={handleClose}
         >
           <span className="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
             <svg

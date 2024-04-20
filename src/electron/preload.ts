@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-interface ElectronAPI {
-    SendToElectron: (channel: string, data?: any) => void;
-    ReceivedFromElectron: (channel: string, func: (event: IpcRendererEvent, ...args: any[]) => void) => void;
+export interface ElectronAPI {
+    SendToElectron: (channel: string, data?: unknown) => void;
+    ReciveFromElectron: (channel: string, func: (event: IpcRendererEvent, ...args: unknown[]) => void) => void;
 }
 
 const electronAPI: ElectronAPI = {
@@ -10,7 +10,7 @@ const electronAPI: ElectronAPI = {
         console.log(`Sending message to Electron on channel: ${channel}`);
         ipcRenderer.send(channel, data);
     },
-    ReceivedFromElectron: (channel, func) => {
+    ReciveFromElectron: (channel, func) => {
         console.log(`Listening for messages from Electron on channel: ${channel}`);
         ipcRenderer.on(channel, (event, ...args) => func(event, ...args));
     },
