@@ -1,14 +1,15 @@
-import BottomBar from "./components/BottomBar";
-import MainScreen from "./components/MainScrea";
-import ModalPlaylist from "./components/ModalPlaylist";
-import Toast from "./components/Toast";
-
+import { createRoot } from "react-dom/client";
+import HomePage from "./pages/HomePage";
+import BaseLayout from "./layouts/BaseLayout";
 export default function App() {
-  return <main className="flex flex-col h-screen">
-    <Toast />
-    <MainScreen />
-    <BottomBar />
-    <ModalPlaylist />
-  </main>
 
+
+  return (
+    <BaseLayout>
+      <HomePage />
+    </BaseLayout>
+  );
 }
+
+const root = createRoot(document.getElementById("app")!);
+root.render(<App />);
