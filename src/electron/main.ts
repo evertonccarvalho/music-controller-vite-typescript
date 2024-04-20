@@ -1,18 +1,21 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
-
+import fs from "node:fs"
+const preload = path.join(__dirname, 'preload.js');
+const musicDir = path.join(__dirname, '..', 'public', 'music');
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let mainWindow: BrowserWindow;
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: preload,
     },
   });
 
@@ -26,6 +29,7 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -47,6 +51,20 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+ipcMain.on('music-upload', (event, file) => {
+	const filePath = path.join(musicDir, file.name);
+	fs.writeFile(filePath, file.data, async (err) => { // Corrected to use fs.writeFile
+		if (err) {
+			mainWindow.webContents.send('toast:recive', err);
+		} else {
+			mainWindow.webContents.send(
+				'toast:recive',
+				'Arquivo Recebido com sucesso'
+			);
+		}
+	});
 });
 
 // In this file you can include the rest of your app's specific main process
