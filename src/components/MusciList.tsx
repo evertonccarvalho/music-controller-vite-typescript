@@ -1,9 +1,24 @@
-"use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import MusicInList from "./MusicInList"
+import { IpcRendererEvent } from "electron";
 
 export default function MusicList() {
-  const [musicList, setMusicList] = useState([])
+  const [musicList, setMusicList] = useState<string[]>([]);
+  const fetchMusicList = async () => {
+    try {
+      await window.electronAPI.SendToElectron('music-get')
+      await window.electronAPI.ReciveFromElectron("music-list", (event: IpcRendererEvent, arg: string[]) => {
+        setMusicList(arg);
+      });
+
+    } catch (error) {
+      console.error('Erro ao obter a lista de músicas:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMusicList()
+  }, []);
   return (
     <div className=" w-11/12">
       <h2 className="ml-5 text-white text-2xl">Music List</h2>
