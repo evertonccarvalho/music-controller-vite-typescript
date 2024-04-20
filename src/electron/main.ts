@@ -16,6 +16,8 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: preload,
+			nodeIntegration: true,
+			contextIsolation: true,
     },
   });
 
