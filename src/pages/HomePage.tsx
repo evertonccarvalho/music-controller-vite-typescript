@@ -1,6 +1,6 @@
 import React from "react";
 import Toast from "../components/Toast";
-import MainScreen from "../components/MainScrea";
+import MainScreen from "../components/MainScreen";
 import BottomBar from "../components/BottomBar";
 import ModalPlaylist from "../components/ModalPlaylist";
 

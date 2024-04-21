@@ -59,10 +59,10 @@ ipcMain.on('music-upload', (event, file) => {
   const filePath = path.join(musicDir, file.name);
   fs.writeFile(filePath, file.data, async (err) => {
       if (err) {
-        console.log(err)
+        // console.log(err)
           mainWindow.webContents.send('toast:recive', err.message);
       } else {
-        console.log("Arquivo recebido com sucesso")
+        // console.log("Arquivo recebido com sucesso")
         sendUpdateList();
         mainWindow.webContents.send('toast:recive', 'Arquivo recebido com sucesso');
       }
@@ -92,8 +92,10 @@ ipcMain.on('music-delete', async (event, file) => {
 });
 
 ipcMain.on('music-to-play', (event, fileName) => {
-  mainWindow.webContents.send("music-playable", fileName)
-})
+  console.log('Received request to play music:', fileName);
+  mainWindow.webContents.send("music-playable", fileName);
+});
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

@@ -1,8 +1,8 @@
-interface ElectronWindow {
-    SendToElectron: (channel: string, args?: string) => Promise<void>;
-    ReciveFromElectron: (channel: string, listener: (event: IpcRendererEvent, ...args: unknown[]) => void) => void;
+interface ElectronAPI {
+    SendToElectron: (channel: string, data?: unknown) => void;
+    ReciveFromElectron: (channel: string, func: (event: IpcRendererEvent, ...args: unknown[]) => void) => void;
 }
 
 declare interface Window {
-    electronAPI: ElectronWindow;
+    electronAPI: ElectronAPI;
 }
